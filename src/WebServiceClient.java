@@ -1,7 +1,10 @@
 
+import au.edu.unsw.sltf.client.SummaryMarketDataFaultException;
 import au.edu.unsw.sltf.client.SummaryMarketDataServiceStub;
 import au.edu.unsw.sltf.services.SummaryMarketDataDocument;
 import au.edu.unsw.sltf.services.SummaryMarketDataDocument.SummaryMarketData;
+import au.edu.unsw.sltf.services.SummaryMarketDataFaultDocument;
+import au.edu.unsw.sltf.services.SummaryMarketDataFaultDocument.SummaryMarketDataFault;
 import au.edu.unsw.sltf.services.SummaryMarketDataResponseDocument;
 import au.edu.unsw.sltf.services.SummaryMarketDataResponseDocument.SummaryMarketDataResponse;
 
@@ -32,22 +35,28 @@ public class WebServiceClient {
         SummaryMarketData smdReq = smdReqDoc.addNewSummaryMarketData();
         smdReq.setEventSetId("3");
         
-        SummaryMarketDataResponseDocument smdRespDoc = stub.summaryMarketData(smdReqDoc);
-        SummaryMarketDataResponse smdResp = smdRespDoc.getSummaryMarketDataResponse();
+        StringBuilder sbf = new StringBuilder();
+        try {
+        	SummaryMarketDataResponseDocument smdRespDoc = stub.summaryMarketData(smdReqDoc);
+            SummaryMarketDataResponse smdResp = smdRespDoc.getSummaryMarketDataResponse();
+            
+            sbf.append("EventSetId: ").append(smdResp.getEventSetId()).append("\n");
+            sbf.append("Security code: ").append(smdResp.getSec()).append("\n");
+            sbf.append("Start Date: ").append(smdResp.getStartDate()).append("\n");
+            sbf.append("End Date: ").append(smdResp.getEndDate()).append("\n");
+            sbf.append("Market Type: ").append(smdResp.getMarketType()).append("\n");
+            sbf.append("Currency code: ").append(smdResp.getCurrencyCode()).append("\n");
+            sbf.append("File size: ").append(smdResp.getFileSize()).append("\n");
+        } catch (SummaryMarketDataFaultException se) {
+        	SummaryMarketDataFaultDocument faultDoc = se.getFaultMessage();
+        	SummaryMarketDataFault fault = faultDoc.getSummaryMarketDataFault();
+        	au.edu.unsw.sltf.services.SummaryMarketDataFaultType.Enum faultType = fault.getFaultType();
+        	String faultMsg = fault.getFaultMessage();
+        	
+        	sbf.append("Fault type: ").append(faultType).append("\n");
+        	sbf.append("Fault message: ").append(faultMsg).append("\n");
+        }
         
-        //return resp.getReturn();
-        
-        //TODO: do I have to abstract the response away from the client?
-        //TODO: above doesn't work
-   	 	StringBuilder sbf = new StringBuilder();
-        sbf.append("EventSetId: ").append(smdResp.getEventSetId()).append("\n");
-        sbf.append("Security code: ").append(smdResp.getSec()).append("\n");
-        sbf.append("Start Date: ").append(smdResp.getStartDate()).append("\n");
-        sbf.append("End Date: ").append(smdResp.getEndDate()).append("\n");
-        sbf.append("Market Type: ").append(smdResp.getMarketType()).append("\n");
-        sbf.append("Currency code: ").append(smdResp.getCurrencyCode()).append("\n");
-        sbf.append("File size: ").append(smdResp.getFileSize()).append("\n");
-           	 
 		return sbf.toString();
     }
 }
