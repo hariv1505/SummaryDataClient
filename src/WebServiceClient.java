@@ -1,4 +1,6 @@
 
+import java.util.Calendar;
+
 import au.edu.unsw.sltf.client.SummaryMarketDataFaultException;
 import au.edu.unsw.sltf.client.SummaryMarketDataServiceStub;
 import au.edu.unsw.sltf.services.SummaryMarketDataDocument;
@@ -42,8 +44,8 @@ public class WebServiceClient {
             
             sbf.append("EventSetId: ").append(smdResp.getEventSetId()).append("\n");
             sbf.append("Security code: ").append(smdResp.getSec()).append("\n");
-            sbf.append("Start Date: ").append(smdResp.getStartDate()).append("\n");
-            sbf.append("End Date: ").append(smdResp.getEndDate()).append("\n");
+            sbf.append("Start Date: ").append(stringifyDate(smdResp.getStartDate())).append("\n");
+            sbf.append("End Date: ").append(stringifyDate(smdResp.getEndDate())).append("\n");
             sbf.append("Market Type: ").append(smdResp.getMarketType()).append("\n");
             sbf.append("Currency code: ").append(smdResp.getCurrencyCode()).append("\n");
             sbf.append("File size: ").append(smdResp.getFileSize()).append("\n");
@@ -59,5 +61,19 @@ public class WebServiceClient {
         
 		return sbf.toString();
     }
+    
+    private static String stringifyDate(Calendar time) {
+		StringBuilder sbf = new StringBuilder();
+		sbf.append(time.get(Calendar.YEAR)).append("-");
+		sbf.append((time.get(Calendar.MONTH) + 1)).append("-");
+		sbf.append(time.get(Calendar.DATE));
+		sbf.append("T");
+		sbf.append(time.get(Calendar.HOUR_OF_DAY)).append(":");
+		sbf.append(time.get(Calendar.MINUTE)).append(":");
+		sbf.append(time.get(Calendar.SECOND)).append(".");
+		sbf.append(time.get(Calendar.MILLISECOND));
+		
+		return sbf.toString();
+	}
 }
 
