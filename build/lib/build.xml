@@ -1,0 +1,15 @@
+<project basedir="." default="run">
+<property environment="env"/>
+<property name="axis2.home" value="/apps/axis2-1.6.2/"/>
+<path id="axis2.class.path">
+<pathelement path="SummaryMarketDataService-test-client.jar"/>
+<fileset dir="${axis2.home}">
+<include name="lib/*.jar"/>
+</fileset>
+</path>
+<target name="run">
+<java fork="true" classname="WebServiceClient">
+<classpath refid="axis2.class.path"/>
+</java>
+</target>
+</project>
