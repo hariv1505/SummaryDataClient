@@ -24,7 +24,7 @@ import au.edu.unsw.sltf.services.SummaryMarketDataResponseDocument.SummaryMarket
 public class SummaryDataWebServiceClient {
 
     public static SummaryMarketDataResponse main(String[] args) {
-        String wsURL = "http://localhost:8080/axis2/services/SummaryMarketDataService";
+    	String wsURL = "http://hvee350.srvr:8080/axis2/services/SummaryMarketDataService";
        
             SummaryMarketDataServiceStub stub;
 			try {
